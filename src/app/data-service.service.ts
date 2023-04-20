@@ -24,7 +24,7 @@ export class DataService {
     {
       name: 'Harry Bolz',
       ticker: 'HARRY',
-      address: 'https://etherscan.io/token/0x0db5cf386a9fe104fe3597f013db71bfae89416c#balances',
+      address: '0x0db5cf386a9fe104fe3597f013db71bfae89416c#balances',
       freshWallets: 1,
       dormantWallets: 0,
       initialLiquidityPool: 0.80,
@@ -39,7 +39,7 @@ export class DataService {
       topHolders: [
         {
           rank: 1,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0x123456789abcdeffedcba9876543210',
+          url: '0x123456789abcdef?a=0x123456789abcdeffedcba9876543210',
           holdingsPercent: 20.0,
           holdingTime: '2hrs, 10mins',
           totalSpent: 5000.0,
@@ -48,7 +48,7 @@ export class DataService {
         },
         {
           rank: 2,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0x0987654321fedcba',
+          url: '0x123456789abcdef?a=0x0987654321fedcba',
           holdingsPercent: 10.0,
           holdingTime: '6hrs, 22mins',
           totalSpent: 2500.0,
@@ -57,7 +57,7 @@ export class DataService {
         },
         {
           rank: 3,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0xdeadbeef12345678',
+          url: '0x123456789abcdef?a=0xdeadbeef12345678',
           holdingsPercent: 7.5,
           holdingTime: '1day, 4hrs',
           totalSpent: 7500.0,
@@ -66,7 +66,7 @@ export class DataService {
         },
         {
           rank: 4,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0x1122334455667788',
+          url: '0x123456789abcdef?a=0x1122334455667788',
           holdingsPercent: 5.0,
           holdingTime: '1hr, 5mins',
           totalSpent: 1000.0,
@@ -75,7 +75,7 @@ export class DataService {
         },
         {
           rank: 5,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0x5555555555555555',
+          url: '0x123456789abcdef?a=0x5555555555555555',
           holdingsPercent: 2.5,
           holdingTime: '1day, 1hr',
           totalSpent: 250.0,
@@ -87,7 +87,7 @@ export class DataService {
     {
       name: 'Moon Token',
       ticker: 'MOON',
-      address: 'https://etherscan.io/token/0x0db5cf386a9fe104fe3597f013db71bfae89416c#balances',
+      address: '0x0db5cf386a9fe104fe3597f013db71bfae89416c#balances',
       freshWallets: 2,
       dormantWallets: 1,
       initialLiquidityPool: 0.50,
@@ -102,7 +102,7 @@ export class DataService {
       topHolders: [
         {
           rank: 1,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0x123456789abcdeffedcba9876543210',
+          url: '0x123456789abcdef?a=0x123456789abcdeffedcba9876543210',
           holdingsPercent: 25.0,
           holdingTime: '1hr, 5mins',
           totalSpent: 5000.0,
@@ -111,7 +111,7 @@ export class DataService {
         },
         {
           rank: 2,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0x0987654321fedcba',
+          url: '0x123456789abcdef?a=0x0987654321fedcba',
           holdingsPercent: 15.0,
           holdingTime: '3hrs, 15mins',
           totalSpent: 3000.0,
@@ -120,7 +120,7 @@ export class DataService {
         },
         {
           rank: 3,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0xdeadbeef12345678',
+          url: '0x123456789abcdef?a=0xdeadbeef12345678',
           holdingsPercent: 10.0,
           holdingTime: '1day, 10hrs',
           totalSpent: 5000.0,
@@ -129,7 +129,7 @@ export class DataService {
         },
         {
           rank: 4,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0x1122334455667788',
+          url: '0x123456789abcdef?a=0x1122334455667788',
           holdingsPercent: 7.5,
           holdingTime: '4hrs, 22mins',
           totalSpent: 1000.0,
@@ -138,7 +138,7 @@ export class DataService {
         },
         {
           rank: 5,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0x5555555555555555',
+          url: '0x123456789abcdef?a=0x5555555555555555',
           holdingsPercent: 5.0,
           holdingTime: '5hrs, 30mins',
           totalSpent: 500.0,
@@ -150,7 +150,7 @@ export class DataService {
     {
       name: 'Galactic Coin',
       ticker: 'GALAXY',
-      address: 'https://etherscan.io/token/0x0db5cf386a9fe104fe3597f013db71bfae89416c#balances',
+      address: '0x0db5cf386a9fe104fe3597f013db71bfae89416c#balances',
       freshWallets: 5,
       dormantWallets: 2,
       initialLiquidityPool: 0.40,
@@ -165,7 +165,7 @@ export class DataService {
       topHolders: [
         {
           rank: 1,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0x123456789abcdeffedcba9876543210',
+          url: '0x123456789abcdef?a=0x123456789abcdeffedcba9876543210',
           holdingsPercent: 15.0,
           holdingTime: '10hrs, 30mins',
           totalSpent: 10000.0,
@@ -174,7 +174,7 @@ export class DataService {
         },
         {
           rank: 2,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0x0987654321fedcba',
+          url: '0x123456789abcdef?a=0x0987654321fedcba',
           holdingsPercent: 12.5,
           holdingTime: '2days, 6hrs',
           totalSpent: 5000.0,
@@ -183,7 +183,7 @@ export class DataService {
         },
         {
           rank: 3,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0xdeadbeef12345678',
+          url: '0x123456789abcdef?a=0xdeadbeef12345678',
           holdingsPercent: 7.5,
           holdingTime: '3days, 18hrs',
           totalSpent: 2500.0,
@@ -192,7 +192,7 @@ export class DataService {
         },
         {
           rank: 4,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0x1122334455667788',
+          url: '0x123456789abcdef?a=0x1122334455667788',
           holdingsPercent: 5.0,
           holdingTime: '1hr, 50mins',
           totalSpent: 500.0,
@@ -201,7 +201,7 @@ export class DataService {
         },
         {
           rank: 5,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0x5555555555555555',
+          url: '0x123456789abcdef?a=0x5555555555555555',
           holdingsPercent: 2.5,
           holdingTime: '2days, 8hrs',
           totalSpent: 1000.0,
@@ -213,7 +213,7 @@ export class DataService {
     {
       name: 'Sonic',
       ticker: 'SONIC',
-      address: 'https://etherscan.io/token/0x0db5cf386a9fe104fe3597f013db71bfae89416c#balances',
+      address: '0x0db5cf386a9fe104fe3597f013db71bfae89416c#balances',
       freshWallets: 3,
       dormantWallets: 1,
       initialLiquidityPool: 0.60,
@@ -228,7 +228,7 @@ export class DataService {
       topHolders: [
         {
           rank: 1,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0x123456789abcdeffedcba9876543210',
+          url: '0x123456789abcdef?a=0x123456789abcdeffedcba9876543210',
           holdingsPercent: 20.0,
           holdingTime: '1hr, 30mins',
           totalSpent: 10000.0,
@@ -237,7 +237,7 @@ export class DataService {
         },
         {
           rank: 2,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0x0987654321fedcba',
+          url: '0x123456789abcdef?a=0x0987654321fedcba',
           holdingsPercent: 12.5,
           holdingTime: '1day, 2hrs',
           totalSpent: 5000.0,
@@ -246,7 +246,7 @@ export class DataService {
         },
         {
           rank: 3,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0xdeadbeef12345678',
+          url: '0x123456789abcdef?a=0xdeadbeef12345678',
           holdingsPercent: 10.0,
           holdingTime: '2days, 8hrs',
           totalSpent: 5000.0,
@@ -255,7 +255,7 @@ export class DataService {
         },
         {
           rank: 4,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0x1122334455667788',
+          url: '0x123456789abcdef?a=0x1122334455667788',
           holdingsPercent: 7.5,
           holdingTime: '3hrs, 10mins',
           totalSpent: 1000.0,
@@ -264,7 +264,7 @@ export class DataService {
         },
         {
           rank: 5,
-          url: 'https://etherscan.io/token/0x123456789abcdef?a=0x5555555555555555',
+          url: '0x123456789abcdef?a=0x5555555555555555',
           holdingsPercent: 5.0,
           holdingTime: '1day, 1hr',
           totalSpent: 2000.0,

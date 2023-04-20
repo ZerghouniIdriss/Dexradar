@@ -1,5 +1,7 @@
 <mat-toolbar color="primary">
   <span>Token Analytics</span>
+  <span class="beta-version">Beta Version</span>
+
 </mat-toolbar>
 
 <div class="m-3">
@@ -16,19 +18,19 @@
   </div>
 </div>
 
-<div fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="center" *ngIf="searchedToken">
-  <mat-card fxFlex="100%" fxFlex.gt-sm="75" fxFlex.gt-md="75%">
+<div fxLayout="row" fxLayoutAlign="center" *ngIf="searchedToken">
+  <mat-card fxFlex="100%" fxFlex.gt-sm="85" fxFlex.gt-md="85%" >
     <mat-card-header class="card-header">
       <div fxLayout="row" fxLayoutAlign="start center">
         <mat-card-title>{{ searchedToken.name }}</mat-card-title>
-        <mat-card-subtitle class="ml-2">({{ searchedToken.ticker }})</mat-card-subtitle>
+        <mat-card-subtitle>  ({{ searchedToken.ticker }})</mat-card-subtitle>
       </div>
     </mat-card-header>
     <mat-card-content class="mt-2">
       <div fxLayout="row" fxLayoutGap="20px">
         <div fxFlex="50%">
           <p><strong>Overview:</strong></p>
-          <p>Address: <a href="{{ searchedToken.address }}" target="_blank">{{ searchedToken.address }}</a></p>
+          <p>Address: <a href="https://etherscan.io/token/+{{searchedToken.address }}" target="_blank">{{ searchedToken.address }}</a></p>
           <p>Fresh Wallets: {{ searchedToken.freshWallets }}</p>
           <p>Dormant Wallets: {{ searchedToken.dormantWallets }}</p>
           <p>Initial Liquidity Pool: {{ searchedToken.initialLiquidityPool }}</p>
@@ -41,13 +43,13 @@
           <p>Holders Above 20k: {{ searchedToken.holdersAbove20k }}</p>
           <p>Whale Wallets: {{ searchedToken.whaleWallets }}</p>
         </div>
-        <div fxFlex="2" style="border-left: 1px solid rgba(0, 0, 0, 0.12);"></div>
+        <div fxFlex="2" style="border-left: 1px solid rgb(103, 58, 183)"></div>
         <div fxFlex="48%">
           <p><strong>Top Holders:</strong></p>
           <div style="max-height: 80vh; overflow-y: auto;">
             <div *ngFor="let holder of searchedToken.topHolders">
               <p>Rank: {{ holder.rank }}</p>
-              <p>URL: <a href="{{ holder.url }}" target="_blank">{{ holder.url }}</a></p>
+              <p>URL: <a href="https://etherscan.io/token/+{{ holder.url }}" target="_blank">{{ holder.url }}</a></p>
               <p>Holdings Percent: {{ holder.holdingsPercent }}%</p>
               <p>Holding Time: {{ holder.holdingTime }}</p>
               <p>Total Spent: {{ holder.totalSpent }}</p>
@@ -69,7 +71,7 @@
 
 
 <div class="m-3">
-  <div *ngIf="searchQuery && !searchedToken" class="not-found-message">
+  <div *ngIf="searchQuery && !searchedToken && submit" class="not-found-message">
     <p>We didn't find the token you searched for.</p>
   </div>
 </div>

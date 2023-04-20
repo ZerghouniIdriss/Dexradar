@@ -11,12 +11,13 @@ export class MainPageComponent implements OnInit {
  
   searchedToken: TokenData | null = null;
   searchQuery: string = '';
-
+  submit:boolean=false;
   constructor(private dataService: DataService) {}
   
   ngOnInit() {}
 
   searchToken() {
+    this.submit=true;
     this.searchedToken = this.dataService.searchToken(this.searchQuery);
   }
 }
