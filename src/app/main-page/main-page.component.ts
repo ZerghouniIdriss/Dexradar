@@ -18,6 +18,11 @@ export class MainPageComponent implements OnInit {
 
   searchToken() {
     this.submit=true;
-    this.searchedToken = this.dataService.searchToken(this.searchQuery);
-  }
+    this.dataService.searchToken(this.searchQuery).then((foundToken) => {
+      if (foundToken) {
+        this.searchedToken = foundToken;
+      } else {
+        this.searchedToken = null;
+      }
+    });  }
 }
