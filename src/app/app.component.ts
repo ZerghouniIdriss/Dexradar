@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'token-analytic-app';
+  searchedAddress = '';
+
+  searchAddress(address: string) {
+    this.searchedAddress = address;
+  }
 }
