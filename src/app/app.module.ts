@@ -15,14 +15,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { AddressLookupComponent } from './address-lookup/address-lookup.component';
+import {  HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainPageComponent,
-    AddressLookupComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +37,8 @@ import { AddressLookupComponent } from './address-lookup/address-lookup.componen
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]
