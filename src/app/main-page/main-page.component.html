@@ -1,71 +1,74 @@
-
 <div class="m-3">
-  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
-      <mat-form-field appearance="outline" fxFlex="100" fxFlex.lt-md="100">
-          <mat-label>Search Token</mat-label>
-          <input matInput [(ngModel)]="tokenContractAddress"
-              placeholder="Search by Address / Txn Hash / Block / Token / Domain Name">
-          <button fxFlexAlign="center" mat-raised-button color="primary" (click)="searchAddress()" fxFlex="5"
-              fxFlex.lt-md="100">
-              <mat-icon>search</mat-icon>
-          </button>
-      </mat-form-field>
-  </div>
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.lt-md="100">
+            <mat-label>Search Token</mat-label>
+            <input matInput [(ngModel)]="tokenContractAddress"
+                placeholder="Search by Address / Txn Hash / Block / Token / Domain Name">
+            <button mat-icon-button matSuffix (click)="searchAddress()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
 </div>
+
 
 <div fxLayout="row" fxLayoutAlign="center" *ngIf="searchedToken">
-  
-  <div fxFlex="100%" fxFlex.gt-sm="85" fxFlex.gt-md="85%" *ngIf="searchedToken">
-      <div class="header">
-          <div fxLayout="row" fxLayoutAlign="start center">
-              <h2>{{contractName}}</h2>
-          </div>
-      </div>
-      <div class="m-2">
-          <div fxLayout="row" fxLayoutGap="20px">
-              <div fxFlex="100%" fxFlexOrder.lt-md="1">
-                  <p><strong>Token Overview:</strong></p>
-                  <p><span matTooltip="Contract Name">📝</span> Contract Name: {{contractName}}</p>
-                  <p><span matTooltip="Contracts is Verified">{{ contractVerified ? '✅' : '❌' }}</span> Contract is
-                      {{contractVerified ? 'Verified' : 'Not Verified'}}</p>
-                  <p><span matTooltip="Contract Age">🕰</span> Age: {{contractAge ? 'Contract created ' + contractAge
-                      : 'Unknown'}} </p>
-                  <p><span matTooltip="Total Supply">📊</span> Total Supply: {{totalSupply}}</p>
-                  <p><span matTooltip="Burned Supply">🔥</span> Burned Supply: {{burnedSupply}}   |  
-                      {{burnedSupply/100}} %</p>
-                  <p><span matTooltip="Owner Address">👨‍💻</span>Owner Address: 
-                      <a href="https://etherscan.io/address/{{ownerAddress}}" target="_blank"> {{ownerAddress}}</a>
-                  </p>
-                  <p><span matTooltip="Owner ETH Balance">💸</span> Owner ETH Balance: {{ownerBalance}} ETH</p>
-                  <p><span matTooltip="Market Cap">💵</span> MCap: $:{{marketCapUsd}}  |  ETH:{{ethMarketCap}}</p>
-                  <p><span matTooltip="Liquidity">💰</span> Liquidity: $:{{liquidityUsd}}  |  WETH:{{liquidityEth}} </p>
-                  <p><span matTooltip="Holders">👥</span> Holders: {{holders}}</p>
-                  <p><span matTooltip="Fresh Wallets">💼</span> Fresh Wallet: {{freshWallets}}</p>
-                  <p><span matTooltip="Dormant Wallets">💼</span> Dormant Wallet (<30 days): {{dormantWallets}}</p>
-                  <p><span matTooltip="Whales Wallet (100K)">💼</span> Whales Wallet (100K): {{whaleWallets}}</p>
-                  <p><span matTooltip="Mini Whales Wallet (20K)">💼</span> Mini Whales Wallet (20K): {{miniWhaleWallets}}</p>
-              </div>
-              <div fxFlex="100%" fxFlexOrder.lt-md="2">
-                  <p><strong>Top Holders:</strong></p>
-                  <div style="max-height: 80vh; overflow-y: auto;">
-                      <div *ngFor="let holder of topHolders">
-                          <p>Rank: {{ holder.rank }}</p>
-                          <p>URL: <a href="https://etherscan.io/address/{{ holder.url }}" target="_blank">{{ holder.url }}</a></p>
-                          <p>Holdings Percent: {{ holder.holdingsPercent }}%</p>
-                          <p>Holding Time: {{ holder.holdingTime }}</p>
-                          <p>Total Spent: {{ holder.totalSpent }}</p>
-                          <p>Current Value: {{ holder.currentValue }}</p>
-                          <p>Total Funds: {{ holder.totalFunds }}</p>
-                          <hr>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
+    <mat-card class="custom-card" fxFlex="100%" fxFlex.gt-sm="85" fxFlex.gt-md="85%" *ngIf="searchedToken">
+        <mat-card-header>
+            <mat-card-title>
+                {{contractName}}
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="m-2">
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <div fxFlex="100%" fxFlexOrder.lt-md="1">
+                        <h3>Token Overview:</h3>
+                        <p> 📝Contract Name: {{contractName}}</p>
+                        <p> {{ contractVerified ? '✅' : '❌' }} Contract is
+                            {{contractVerified ? 'Verified' : 'Not Verified'}}</p>
+                        <p> 🕰 Age: {{contractAge ? 'Contract created ' + contractAge
+                            : 'Unknown'}} </p>
+                        <p>📊Total Supply: {{totalSupply}}</p>
+                        <p> 🔥 Burned Supply: {{burnedSupply}} |
+                            {{burnedSupply/100}} %</p>
+                        <p> 👨‍💻Owner Address:
+                            <a href="https://etherscan.io/address/{{ownerAddress}}" target="_blank">
+                                {{ownerAddress}}</a>
+                        </p>
+                        <p> 💸 Owner ETH Balance: {{ownerBalance}} ETH</p>
+                        <p> 💵 MCap: $:{{marketCapUsd}} | ETH:{{ethMarketCap}}</p>
+                        <p> 💰 Liquidity: $:{{liquidityUsd}} | WETH:{{liquidityEth}} </p>
+                        <p> 👥 Holders: {{holders}}</p>
+                        <p> 💼 Fresh Wallet: {{freshWallets}}</p>
+                        <p> 💼 Dormant Wallet (<30 days): {{dormantWallets}}</p>
+                                <p> 🐋 Whales Wallet (100K): {{whaleWallets}}</p>
+                                <p> 🐬 Dolphin Wallet (20K): {{miniWhaleWallets}}</p>
+                    </div>
+                    <div fxFlex="100%" fxFlexOrder.lt-md="2">
+                        <h3>Top Holders:</h3>
+                        <div style="max-height: 80vh; overflow-y: auto;">
+                            <div *ngFor="let holder of topHolders">
+                                <p>Rank: {{ holder.rank }}</p>
+                                <p>URL: <a href="https://etherscan.io/address/{{ holder.url }}" target="_blank">{{
+                                        holder.url }}</a></p>
+                                <p>Holdings Percent: {{ holder.holdingsPercent }}%</p>
+                                <p>Holding Time: {{ holder.holdingTime }}</p>
+                                <p>Total Spent: {{ holder.totalSpent }}</p>
+                                <p>Current Value: {{ holder.currentValue }}</p>
+                                <p>Total Funds: {{ holder.totalFunds }}</p>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+        </mat-card-content>
+    </mat-card>
 </div>
+
 <div class="m-3">
-  <div *ngIf="searchQuery && !searchedToken && submit" class="not-found-message">
-      <p>We didn't find the token you searched for.</p>
-  </div>
+    <div *ngIf="searchQuery && !searchedToken && submit" class="not-found-message">
+        <p>We didn't find the token you searched for.</p>
+    </div>
 </div>
