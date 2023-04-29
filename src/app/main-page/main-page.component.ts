@@ -9,7 +9,7 @@ import { ChainId, Token, WETH, Fetcher } from '@uniswap/sdk';
   styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent implements OnInit {
-  tokenContractAddress = '';
+  tokenContractAddress = '0x5026f006b85729a8b14553fae6af249ad16c9aab';
 
   apiKey = 'Z4M71TUYY87Z18PQP57MSC1EYTI82URZ4T';
   coingeckoApiUrl = 'https://api.coingecko.com/api/v3';
@@ -19,7 +19,7 @@ export class MainPageComponent implements OnInit {
   searchQuery = false;
   searchedToken = false;
   submit = false;
-
+  isLoading = false;
   contractName: string;
   contractVerified: boolean;
   contractAge: string;
@@ -43,44 +43,59 @@ export class MainPageComponent implements OnInit {
   allTokenTransferts: any[];
   ethToUsd: any;
 
+  //Displays
+  totalSupplyDisplay: string;
+  marketCapUsdDisplay: string;
+  liquidityUsdDisplay: string;
+
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
 
-    this.searchAddress();
-  }
+   }
 
 
-  async searchAddress() {
+   async searchAddress() {
+    this.isLoading = true; // Set isLoading to true at the beginning of the method
     this.submit = true;
     this.searchQuery = !!this.tokenContractAddress;
-    if (!this.tokenContractAddress) return;
+    if (!this.tokenContractAddress) {
+      this.isLoading = false;
+      return;
+    }
     const foundToken = await this.fetchContractInfo();
     this.searchedToken = !!foundToken;
     if (foundToken) {
-      this.fetchContractVerificationStatus(); 
-      this.fetchContractAge();
-      this.fetchBurnedSupply();
-      await this.fetchContractOwner().then(() => {
-        this.fetchOwnerBalance();
+      const promises = [
+        this.fetchContractVerificationStatus(),
+        this.fetchContractAge(),
+        this.fetchBurnedSupply(),
+        this.fetchContractOwner().then(() => {
+          this.fetchOwnerBalance();
+        }),
+        this.fetchTotalSupply().then(() => {
+          return this.fetchEthToUsd().then(() => {
+            this.fetchMarketData();
+            this.fetchLiquidityUniswap();
+          });
+        }),
+        this.fetchAllTokenTransfers().then(() => {
+          this.fetchTopHolders();
+          this.fetchHolderscCount();
+          this.fetchFreshWallets();
+          this.fetchDormantWallets();
+          this.fetchAllWhaleWallets();
+        }),
+      ];
+  
+      await Promise.all(promises).then(() => {
+        this.isLoading = false; // Set isLoading to false when all data are fetched
       });
-      await this.fetchTotalSupply().then(() => {
-        this.fetchEthToUsd().then(() => {
-        this.fetchMarketData();
-        this.fetchLiquidityUniswap();
-        })
-      });
-      await this.fetchAllTokenTransfers().then(() => {
-        this.fetchTopHolders();
-        this.fetchHolderscCount()
-        this.fetchFreshWallets();
-        this.fetchDormantWallets();
-        this.fetchAllWhaleWallets();
-      });
-
+    } else {
+      this.isLoading = false;
     }
   }
-
+  
   async fetchContractVerificationStatus() {
     const contractVerifiedUrl = `https://api.etherscan.io/api?module=contract&action=getabi&address=${this.tokenContractAddress}&apikey=${this.apiKey}`;
   
@@ -129,7 +144,8 @@ export class MainPageComponent implements OnInit {
   async fetchTotalSupply() {
     const totalSupplyUrl = `https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress=${this.tokenContractAddress}&apikey=${this.apiKey}`;
     const response = await this.http.get(totalSupplyUrl).toPromise();
-    this.totalSupply = Number(response['result']);
+    this.totalSupply = response['result'];
+    this.totalSupplyDisplay = this.formatNumber(this.totalSupply);
   }
 
   async fetchBurnedSupply() {
@@ -211,14 +227,15 @@ export class MainPageComponent implements OnInit {
     const liquidityWETH = pair.reserveOf(weth).toSignificant();
   
     this.liquidityUsd = parseFloat(liquidityToken) * this.tokenPriceUsd;
+    this.liquidityUsdDisplay= this.formatNumber(this.liquidityUsd,2);
     this.liquidityEth = parseFloat(liquidityWETH);
   }
   async fetchMarketData() {
     const tokenPriceEth = await this.fetchTokenPriceUniswap();
     this.tokenPriceEth = tokenPriceEth;
     this.tokenPriceUsd = tokenPriceEth * this.ethToUsd;
-  
-    this.marketCapUsd = tokenPriceEth * this.ethToUsd * this.totalSupply;
+     this.marketCapUsd = tokenPriceEth * this.ethToUsd * this.totalSupply;
+     this.marketCapUsdDisplay= this.formatNumber(this.marketCapUsd);
     this.ethMarketCap = tokenPriceEth * this.totalSupply;
   }
   async fetchEthToUsd() {
@@ -469,6 +486,20 @@ export class MainPageComponent implements OnInit {
   
     return price;
   }
+  formatNumber(num: number, decimals: number = 18): string {
+    num = num / Math.pow(10, decimals);
+  
+    if (num >= 1_000_000_000) {
+      return (num / 1_000_000_000).toFixed(2) + 'B';
+    } else if (num >= 1_000_000) {
+      return (num / 1_000_000).toFixed(2) + 'M';
+    } else if (num >= 1_000) {
+      return (num / 1_000).toFixed(2) + 'K';
+    } else {
+      return num.toFixed(2);
+    }
+  }
+  
 
 }
 

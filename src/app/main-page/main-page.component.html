@@ -1,3 +1,6 @@
+<div *ngIf="isLoading" class="progress-bar-container">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
 <div class="m-3">
     <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.lt-md="100">
@@ -29,7 +32,7 @@
                             {{contractVerified ? 'Verified' : 'Not Verified'}}</p>
                         <p> 🕰 Age: {{contractAge ? 'Contract created ' + contractAge
                             : 'Unknown'}} </p>
-                        <p>📊Total Supply: {{totalSupply}}</p>
+                        <p>📊Total Supply: {{totalSupplyDisplay}}</p>
                         <p> 🔥 Burned Supply: {{burnedSupply}} |
                             {{burnedSupply/100}} %</p>
                         <p> 👨‍💻Owner Address:
@@ -37,7 +40,7 @@
                                 {{ownerAddress}}</a>
                         </p>
                         <p> 💸 Owner ETH Balance: {{ownerBalance}} ETH</p>
-                        <p> 💵 MCap: $:{{marketCapUsd}} | ETH:{{ethMarketCap}}</p>
+                        <p> 💵 Market Cap: $:{{marketCapUsdDisplay}} | ETH:{{ethMarketCap}}</p>
                         <p> 💰 Liquidity: $:{{liquidityUsd}} | WETH:{{liquidityEth}} </p>
                         <p> 👥 Holders: {{holders}}</p>
                         <p> 💼 Fresh Wallet: {{freshWallets}}</p>
