@@ -27,7 +27,7 @@
                   <p><strong>Token Overview:</strong></p>
                   <p><span matTooltip="Contract Name">📝</span> Contract Name: {{contractName}}</p>
                   <p><span matTooltip="Contracts is Verified">{{ contractVerified ? '✅' : '❌' }}</span> Contract is
-                      {{contractVerified ? 'Verified' : 'Not Verified'}}*</p>
+                      {{contractVerified ? 'Verified' : 'Not Verified'}}</p>
                   <p><span matTooltip="Contract Age">🕰</span> Age: {{contractAge ? 'Contract created ' + contractAge
                       : 'Unknown'}} </p>
                   <p><span matTooltip="Total Supply">📊</span> Total Supply: {{totalSupply}}</p>
@@ -37,14 +37,13 @@
                       <a href="https://etherscan.io/address/{{ownerAddress}}" target="_blank"> {{ownerAddress}}</a>
                   </p>
                   <p><span matTooltip="Owner ETH Balance">💸</span> Owner ETH Balance: {{ownerBalance}} ETH</p>
-                  <p><span matTooltip="Market Cap">💵</span> MCap: $:{{marketCap}} ETH:{{ethMarketCap}}</p>
-                  <p><span matTooltip="Liquidity">💰</span> Liquidity: $:{{liquidityUsd}} ({{liquidityEth}} WETH)*</p>
-                  <p><span matTooltip="Holders">👥</span> Holders: {{holders}}*</p>
-                  <p><span matTooltip="Fresh Wallets">💼</span> Fresh Wallet: {{freshWallets}}*</p>
-                  <p><span matTooltip="Dormant Wallets">💼</span> Dormant Wallet: {{dormantWallets}}*</p>
-                  <p><span matTooltip="Whales Wallet (100K)">💼</span> Whales Wallet (100K): {{whaleWallets}}*</p>
-                  <p><span matTooltip="Mini Whales Wallet (20K)">💼</span> Mini Whales Wallet (20K):
-                      {{miniWhaleWallets}}*</p>
+                  <p><span matTooltip="Market Cap">💵</span> MCap: $:{{marketCapUsd}}  |  ETH:{{ethMarketCap}}</p>
+                  <p><span matTooltip="Liquidity">💰</span> Liquidity: $:{{liquidityUsd}}  |  WETH:{{liquidityEth}} </p>
+                  <p><span matTooltip="Holders">👥</span> Holders: {{holders}}</p>
+                  <p><span matTooltip="Fresh Wallets">💼</span> Fresh Wallet: {{freshWallets}}</p>
+                  <p><span matTooltip="Dormant Wallets">💼</span> Dormant Wallet (<30 days): {{dormantWallets}}</p>
+                  <p><span matTooltip="Whales Wallet (100K)">💼</span> Whales Wallet (100K): {{whaleWallets}}</p>
+                  <p><span matTooltip="Mini Whales Wallet (20K)">💼</span> Mini Whales Wallet (20K): {{miniWhaleWallets}}</p>
               </div>
               <div fxFlex="100%" fxFlexOrder.lt-md="2">
                   <p><strong>Top Holders:</strong></p>

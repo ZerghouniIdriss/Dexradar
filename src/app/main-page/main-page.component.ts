@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { formatDate } from '@angular/common';
 import { Holder } from '../token-data.interface';
+import { ChainId, Token, WETH, Fetcher } from '@uniswap/sdk';
 
 @Component({
   selector: 'main-page-lookup',
   templateUrl: './main-page.component.html',
-  styleUrls: ['./main-page.component.css'],
+  styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent implements OnInit {
   tokenContractAddress = '';
@@ -20,7 +20,6 @@ export class MainPageComponent implements OnInit {
   searchedToken = false;
   submit = false;
 
-
   contractName: string;
   contractVerified: boolean;
   contractAge: string;
@@ -28,7 +27,7 @@ export class MainPageComponent implements OnInit {
   burnedSupply: number;
   ownerAddress: string;
   ownerBalance: number;
-  marketCap: number;
+  marketCapUsd: number;
   ethMarketCap: number;
   liquidity: number;
   liquidityUsd: number;
@@ -41,7 +40,8 @@ export class MainPageComponent implements OnInit {
   topHolders: Holder[];
   tokenPriceEth: any;
   tokenPriceUsd: any;
-
+  allTokenTransferts: any[];
+  ethToUsd: any;
 
   constructor(private http: HttpClient) { }
 
@@ -53,22 +53,51 @@ export class MainPageComponent implements OnInit {
 
   async searchAddress() {
     this.submit = true;
-     this.searchQuery = !!this.tokenContractAddress;
+    this.searchQuery = !!this.tokenContractAddress;
     if (!this.tokenContractAddress) return;
     const foundToken = await this.fetchContractInfo();
     this.searchedToken = !!foundToken;
     if (foundToken) {
+      this.fetchContractVerificationStatus(); 
       this.fetchContractAge();
       this.fetchBurnedSupply();
-      this.fetchContractOwner().then(() => {
+      await this.fetchContractOwner().then(() => {
         this.fetchOwnerBalance();
       });
-      this.fetchTotalSupply().then(() => {
+      await this.fetchTotalSupply().then(() => {
+        this.fetchEthToUsd().then(() => {
         this.fetchMarketData();
+        this.fetchLiquidityUniswap();
+        })
       });
-      this.fetchWalletData();
-      this.fetchTopHolders();
+      await this.fetchAllTokenTransfers().then(() => {
+        this.fetchTopHolders();
+        this.fetchHolderscCount()
+        this.fetchFreshWallets();
+        this.fetchDormantWallets();
+        this.fetchAllWhaleWallets();
+      });
+
     }
+  }
+
+  async fetchContractVerificationStatus() {
+    const contractVerifiedUrl = `https://api.etherscan.io/api?module=contract&action=getabi&address=${this.tokenContractAddress}&apikey=${this.apiKey}`;
+  
+    const response = await this.http.get(contractVerifiedUrl).toPromise();
+    const status = response['status'];
+    const result = response['result'];
+  
+    if (status === '1' && result !== 'Contract source code not verified') {
+      this.contractVerified = true;
+    } else {
+      this.contractVerified = false;
+    }
+  }
+
+  
+  fetchHolderscCount() {
+    this.holders = new Set(this.allTokenTransferts.map(transfer => transfer.from).concat(this.allTokenTransferts.map(transfer => transfer.to))).size;
   }
   async fetchContractInfo() {
     const contractInfoUrl = `https://api.etherscan.io/api?module=contract&action=getsourcecode&address=${this.tokenContractAddress}&apikey=${this.apiKey}`;
@@ -150,39 +179,55 @@ export class MainPageComponent implements OnInit {
 
   async fetchTokenPrice() {
     const tokenPriceUrl = `${this.coingeckoApiUrl}/simple/token_price/ethereum?contract_addresses=${this.tokenContractAddress}&vs_currencies=usd%2Ceth`;
-  
+
     const response = await this.http.get(tokenPriceUrl).toPromise();
     const priceData = response[this.tokenContractAddress];
     if (!priceData) {
       return { usd: 0, eth: 0 };
     }
-    this.tokenPriceUsd=priceData.usd
-    this.tokenPriceEth=priceData.eth
+    this.tokenPriceUsd = priceData.usd
+    this.tokenPriceEth = priceData.eth
     return { usd: priceData.usd, eth: priceData.eth };
   }
+
+  async fetchUsdToEthConversionRate() {
+    const conversionUrl = `${this.coingeckoApiUrl}/exchange_rates`;
   
+    const response = await this.http.get(conversionUrl).toPromise();
+    const ethRate = response['rates']['ethereum']['value'];
+    return ethRate;
+  }
+  
+  async fetchLiquidityUniswap() {
+    const chainId = ChainId.MAINNET;
+    const tokenAddress = this.tokenContractAddress;
+  
+    const token = new Token(chainId, tokenAddress, 18);
+    const weth = WETH[chainId];
+  
+    const pair = await Fetcher.fetchPairData(token, weth);
+  
+    const liquidityToken = pair.reserveOf(token).toSignificant();
+    const liquidityWETH = pair.reserveOf(weth).toSignificant();
+  
+    this.liquidityUsd = parseFloat(liquidityToken) * this.tokenPriceUsd;
+    this.liquidityEth = parseFloat(liquidityWETH);
+  }
   async fetchMarketData() {
-    const tokenPrice = await this.fetchTokenPrice();
-    this.marketCap = tokenPrice.usd * this.totalSupply ;
-    this.ethMarketCap = tokenPrice.eth * this.totalSupply ;
-
-
-
-     this.liquidity = 5063; // Fake data, replace with actual data if available
-    this.liquidityUsd = 5063; // Fake data, replace with actual data if available
-    this.liquidityEth = 2.61; // Fake data, replace with actual data if available
+    const tokenPriceEth = await this.fetchTokenPriceUniswap();
+    this.tokenPriceEth = tokenPriceEth;
+    this.tokenPriceUsd = tokenPriceEth * this.ethToUsd;
+  
+    this.marketCapUsd = tokenPriceEth * this.ethToUsd * this.totalSupply;
+    this.ethMarketCap = tokenPriceEth * this.totalSupply;
   }
-
-
-
-  async fetchWalletData() {
-    this.holders = 243; // Fake data, replace with actual data if available
-    this.freshWallets = 3; // Fake data, replace with actual data if available
-    this.dormantWallets = 2; // Fake data, replace with actual data if available
-    this.whaleWallets = 4; // Fake data, replace with actual data if available
-    this.miniWhaleWallets = 8; // Fake data, replace with actual data if available
+  async fetchEthToUsd() {
+    const ethPriceUrl = `${this.coingeckoApiUrl}/simple/price?ids=ethereum&vs_currencies=usd`;
+    const response = await this.http.get(ethPriceUrl).toPromise();
+    const ethPrice = response['ethereum']['usd'];
+    this.ethToUsd=ethPrice
+    return ethPrice;
   }
-
 
   getTimeAgoString(timestamp: number): string {
     const now = new Date().getTime();
@@ -201,31 +246,31 @@ export class MainPageComponent implements OnInit {
       return `${Math.floor(diffInSeconds)} seconds`;
     }
   }
-async fetchAllTokenTransfers() {
-  let transfers = [];
-  let page = 1;
-  let offset=1000;
-  let moreData = true;
+  async fetchAllTokenTransfers() {
+    let transfers = [];
+    let page = 1;
+    let offset = 1000;
+    let moreData = true;
 
-  while (moreData) {
-    const response = await this.fetchTokenTransfers(page,offset);
-    transfers = transfers.concat(response);
-    page++;
+    while (moreData) {
+      const response = await this.fetchTokenTransfers(page, offset);
+      transfers = transfers.concat(response);
+      page++;
 
-    if (response.length < offset) {
-      moreData = false;
+      if (response.length < offset) {
+        moreData = false;
+      }
     }
+    this.allTokenTransferts = transfers;
+    return transfers;
   }
-
-  return transfers;
-}
 
   async fetchTokenTransfers(page: number, offset: number) {
     const transfersUrl = `https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=${this.tokenContractAddress}&page=${page}&offset=${offset}&sort=desc&apikey=${this.apiKey}`;
-  
+
     const response = await this.http.get(transfersUrl).toPromise();
     const transfers = response['result'];
-    if (transfers.length > 0) {
+    if (transfers && transfers.length > 0) {
       return transfers;
     } else {
       console.error('Error fetching token transfers:', response['message']);
@@ -234,71 +279,199 @@ async fetchAllTokenTransfers() {
   }
 
   async fetchTopHolders() {
-    const transfers = await this.fetchAllTokenTransfers();
+    const transfers = this.allTokenTransferts;
     const holdersMap = new Map<string, any>();
-  
+
     // You need to fetch the current token price and total supply to calculate some of the properties
     const currentTokenPrice = this.tokenPriceEth; // Replace this with the actual token price
     const totalSupply = this.totalSupply; // Replace this with the actual total supply of the token
-  
+
     transfers.forEach((transfer) => {
-      const from = transfer.from;
-      const to = transfer.to;
-      const value = Number(transfer.value);
-      const timestamp = transfer.timeStamp;
-  
-      const holderData = (address) => ({
-        holdings: 0,
-        holdingTime: 0,
-        totalSpent: 0,
-        totalFunds: 0,
-        lastUpdated: timestamp,
-      });
-  
-      if (holdersMap.has(from)) {
-        const data = holdersMap.get(from);
-        data.holdings -= value;
-        data.totalSpent += value;
-        data.lastUpdated = timestamp;
-        holdersMap.set(from, data);
-      } else {
-        const data = holderData(from);
-        data.holdings -= value;
-        data.totalSpent += value;
-        holdersMap.set(from, data);
-      }
-  
-      if (holdersMap.has(to)) {
-        const data = holdersMap.get(to);
-        data.holdings += value;
-        data.totalFunds += value;
-        data.holdingTime += timestamp - data.lastUpdated;
-        data.lastUpdated = timestamp;
-        holdersMap.set(to, data);
-      } else {
-        const data = holderData(to);
-        data.holdings += value;
-        data.totalFunds += value;
-        holdersMap.set(to, data);
+      if (transfers && transfers.length > 0) {
+
+        const from = transfer.from;
+        const to = transfer.to;
+        const value = Number(transfer.value);
+        const timestamp = transfer.timeStamp;
+
+        const holderData = (address) => ({
+          holdings: 0,
+          holdingTime: 0,
+          totalSpent: 0,
+          totalFunds: 0,
+          lastUpdated: timestamp,
+        });
+
+        if (holdersMap.has(from)) {
+          const data = holdersMap.get(from);
+          data.holdings -= value;
+          data.totalSpent += value;
+          data.lastUpdated = timestamp;
+          holdersMap.set(from, data);
+        } else {
+          const data = holderData(from);
+          data.holdings -= value;
+          data.totalSpent += value;
+          holdersMap.set(from, data);
+        }
+
+        if (holdersMap.has(to)) {
+          const data = holdersMap.get(to);
+          data.holdings += value;
+          data.totalFunds += value;
+          data.holdingTime += timestamp - data.lastUpdated;
+          data.lastUpdated = timestamp;
+          holdersMap.set(to, data);
+        } else {
+          const data = holderData(to);
+          data.holdings += value;
+          data.totalFunds += value;
+          holdersMap.set(to, data);
+        }
       }
     });
-  
+
     const sortedHolders = Array.from(holdersMap.entries()).sort((a, b) => b[1].holdings - a[1].holdings);
     const topHolders = sortedHolders.slice(0, 10); // Adjust this value to get the desired number of top holders
-  
+
     this.topHolders = topHolders.map(([address, data], index) => ({
       rank: index + 1,
       url: address,
-      holdingsPercent: (data.holdings / totalSupply) * 100,
+      holdingsPercent: parseFloat(((data.holdings / totalSupply) * 100).toFixed(2)), // Updated this line to include toFixed(2)
       holdingTime: new Date(data.holdingTime * 1000).toISOString().substr(11, 8), // Convert to hh:mm:ss format
       totalSpent: data.totalSpent / 1e18,
       currentValue: (data.holdings * currentTokenPrice) / 1e18,
       totalFunds: data.totalFunds / 1e18,
     }));
   }
-  
+
+
+  async fetchFreshWallets() {
+    const walletMap = new Map<string, { received: number; sent: number }>();
+
+    this.allTokenTransferts.forEach(transfer => {
+      if (transfer != null) {
+
+        const from = transfer.from.toLowerCase();
+        const to = transfer.to.toLowerCase();
+
+        if (!walletMap.has(from)) {
+          walletMap.set(from, { received: 0, sent: 0 });
+        }
+
+        if (!walletMap.has(to)) {
+          walletMap.set(to, { received: 0, sent: 0 });
+        }
+
+        walletMap.get(from).sent += 1;
+        walletMap.get(to).received += 1;
+      }
+    });
+
+    let freshWallets = 0;
+    walletMap.forEach(wallet => {
+      if (wallet.received > 0 && wallet.sent === 0) {
+        freshWallets += 1;
+      }
+    });
+
+    this.freshWallets = freshWallets;
+    return freshWallets;
   }
-   
+  async fetchDormantWallets() {
+    const walletMap = new Map<string, number>();
+    const currentTime = Math.floor(new Date().getTime() / 1000);
+    const thirtyDaysInSeconds = 30 * 24 * 60 * 60;
+
+    this.allTokenTransferts.forEach(transfer => {
+      if (transfer !=null)  {
+        const from = transfer.from.toLowerCase();
+        const to = transfer.to.toLowerCase();
+        const timestamp = parseInt(transfer.timeStamp);
+
+        if (!walletMap.has(from)) {
+          walletMap.set(from, timestamp);
+        } else {
+          const lastTxTime = walletMap.get(from);
+          if (timestamp > lastTxTime) {
+            walletMap.set(from, timestamp);
+          }
+        }
+
+        if (!walletMap.has(to)) {
+          walletMap.set(to, timestamp);
+        } else {
+          const lastTxTime = walletMap.get(to);
+          if (timestamp > lastTxTime) {
+            walletMap.set(to, timestamp);
+          }
+        }
+      }
+    });
+
+    let dormantWallets = 0;
+    walletMap.forEach(lastTxTime => {
+      if (currentTime - lastTxTime > thirtyDaysInSeconds) {
+        dormantWallets += 1;
+      }
+    });
+
+    this.dormantWallets = dormantWallets;
+    return dormantWallets;
+  }
+
+  async fetchAllWhaleWallets() {
+    this.whaleWallets = await this.fetchWhaleWallets(100000);
+    this.miniWhaleWallets = await this.fetchWhaleWallets(20000);
+  }
+
+  async fetchWhaleWallets(minimumTokens) {
+    const walletBalances = new Map<string, number>();
+
+    this.allTokenTransferts.forEach(transfer => {
+      if (transfer != null) {
+        const from = transfer.from.toLowerCase();
+        const to = transfer.to.toLowerCase();
+        const value = parseInt(transfer.value);
+
+        if (!walletBalances.has(from)) {
+          walletBalances.set(from, -value);
+        } else {
+          walletBalances.set(from, walletBalances.get(from) - value);
+        }
+
+        if (!walletBalances.has(to)) {
+          walletBalances.set(to, value);
+        } else {
+          walletBalances.set(to, walletBalances.get(to) + value);
+        }
+      }
+    });
+
+    let targetWallets = 0;
+    walletBalances.forEach(balance => {
+      if (balance >= minimumTokens) {
+        targetWallets += 1;
+      }
+    });
+
+    return targetWallets;
+  }
+  async fetchTokenPriceUniswap() {
+    const chainId = ChainId.MAINNET;
+    const tokenAddress = this.tokenContractAddress;
+  
+    const token = new Token(chainId, tokenAddress, 18);
+    const weth = WETH[chainId];
+  
+    const pair = await Fetcher.fetchPairData(token, weth);
+    const price = parseFloat(pair.priceOf(token).toSignificant());
+  
+    return price;
+  }
+
+}
+
 
 /** 
  fetchContractAge()
@@ -335,10 +508,28 @@ You can obtain this information by querying the Ether balance of the contract ow
 */
 
 /*
+fetchtopHolder()
 This method fetches the token transfers and processes them to calculate the token balances for each address. 
 It then sorts the addresses by their balances and returns the top holders. Keep in mind that this method might not be very 
 efficient for tokens with a large number of transfers, and there might be rate limits on the Etherscan API.
 */
 
+/*fetchFreshWallets()
+, we first create a walletMap that tracks the number of received and sent transactions for each wallet address.
+ Then, we iterate through the walletMap and increment the freshWallets counter when a wallet has received tokens (received > 0) 
+ but has not sent any (sent === 0).
+*/
 
+/*fetchDormantWallets()
+This method will iterate through all the token transfers and update the last transaction timestamp for each wallet. 
+It will then count the number of wallets that haven't made any transactions in the last 30 days and store that number in the
+dormantWallets property.
+*/
 
+/*
+fetchWhaleWallets()
+Whale Wallets: We calculate the number of Whale Wallets by iterating through all wallet balances and counting those with at least 100,000 tokens.
+Mini Whale Wallets: Similarly, we calculate the number of Mini Whale Wallets by iterating through all wallet balances and counting those with at least 
+20,000 tokens.*/
+
+ 
