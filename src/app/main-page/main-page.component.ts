@@ -9,7 +9,7 @@ import { ChainId, Token, WETH, Fetcher } from '@uniswap/sdk';
   styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent implements OnInit {
-  tokenContractAddress = '0x5026f006b85729a8b14553fae6af249ad16c9aab';
+  tokenContractAddress = '';
 
   apiKey = 'Z4M71TUYY87Z18PQP57MSC1EYTI82URZ4T';
   coingeckoApiUrl = 'https://api.coingecko.com/api/v3';
@@ -145,7 +145,7 @@ export class MainPageComponent implements OnInit {
     const totalSupplyUrl = `https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress=${this.tokenContractAddress}&apikey=${this.apiKey}`;
     const response = await this.http.get(totalSupplyUrl).toPromise();
     this.totalSupply = response['result'];
-    this.totalSupplyDisplay = this.formatNumber(this.totalSupply);
+    this.totalSupplyDisplay = this.formatLargeNumber(this.totalSupply);
   }
 
   async fetchBurnedSupply() {
@@ -227,7 +227,7 @@ export class MainPageComponent implements OnInit {
     const liquidityWETH = pair.reserveOf(weth).toSignificant();
   
     this.liquidityUsd = parseFloat(liquidityToken) * this.tokenPriceUsd;
-    this.liquidityUsdDisplay= this.formatNumber(this.liquidityUsd,2);
+    this.liquidityUsdDisplay= this.formatLargeNumber(this.liquidityUsd,2);
     this.liquidityEth = parseFloat(liquidityWETH);
   }
   async fetchMarketData() {
@@ -235,7 +235,7 @@ export class MainPageComponent implements OnInit {
     this.tokenPriceEth = tokenPriceEth;
     this.tokenPriceUsd = tokenPriceEth * this.ethToUsd;
      this.marketCapUsd = tokenPriceEth * this.ethToUsd * this.totalSupply;
-     this.marketCapUsdDisplay= this.formatNumber(this.marketCapUsd);
+     this.marketCapUsdDisplay= this.formatLargeNumber(this.marketCapUsd);
     this.ethMarketCap = tokenPriceEth * this.totalSupply;
   }
   async fetchEthToUsd() {
@@ -486,7 +486,7 @@ export class MainPageComponent implements OnInit {
   
     return price;
   }
-  formatNumber(num: number, decimals: number = 18): string {
+  formatLargeNumber(num: number, decimals: number = 18): string {
     num = num / Math.pow(10, decimals);
   
     if (num >= 1_000_000_000) {
