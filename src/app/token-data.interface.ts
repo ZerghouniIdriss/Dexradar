@@ -21,8 +21,7 @@ export interface Holder {
   url: string;
   holdingsPercent: number;
   holdingTime: string;
-  totalSpent: number;
-  currentValue: number;
+  currentValue?: number;
   totalFunds: number;
 }
 

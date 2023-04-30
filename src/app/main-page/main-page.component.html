@@ -39,14 +39,15 @@
                             <a href="https://etherscan.io/address/{{ownerAddress}}" target="_blank">
                                 {{ownerAddress}}</a>
                         </p>
-                        <p> 💸 Owner ETH Balance: {{ownerBalance}} ETH</p>
-                        <p> 💵 Market Cap: $:{{marketCapUsdDisplay}} | ETH:{{ethMarketCap}}</p>
-                        <p> 💰 Liquidity: $:{{liquidityUsd}} | WETH:{{liquidityEth}} </p>
-                        <p> 👥 Holders: {{holders}}</p>
+                        <p> 💸 Owner Balance: {{ownerBalance}} ETH</p>
+                        <!-- <p> 💵 Market Cap: $:{{marketCapUsdDisplay}} </p>
+                        <p> 💰 Liquidity: $:{{liquidityUsd}}   </p> -->
+                        <p> 👥 Holders: {{holdersCount}}</p>
                         <p> 💼 Fresh Wallet: {{freshWallets}}</p>
-                        <p> 💼 Dormant Wallet (<30 days): {{dormantWallets}}</p>
+                        <p> 💼 Dormant Wallet ( < 30 days): {{dormantWallets}}</p>
                                 <p> 🐋 Whales Wallet (100K): {{whaleWallets}}</p>
-                                <p> 🐬 Dolphin Wallet (20K): {{miniWhaleWallets}}</p>
+                                <p> 🐬 Dolphins Wallet (20K): {{dolphinWallets}}</p>
+                                <p> 🐟 fishe Wallet (5K): {{fishWallets}}</p>                                
                     </div>
                     <div fxFlex="100%" fxFlexOrder.lt-md="2">
                         <h3>Top Holders:</h3>
@@ -57,8 +58,8 @@
                                         holder.url }}</a></p>
                                 <p>Holdings Percent: {{ holder.holdingsPercent }}%</p>
                                 <p>Holding Time: {{ holder.holdingTime }}</p>
-                                <p>Total Spent: {{ holder.totalSpent }}</p>
-                                <p>Current Value: {{ holder.currentValue }}</p>
+                                <!-- <p>Total Spent: {{ holder.totalSpent }}</p> -->
+                                <!-- <p>Current Value: {{ holder.currentValue }}</p> -->
                                 <p>Total Funds: {{ holder.totalFunds }}</p>
                                 <hr>
                             </div>
