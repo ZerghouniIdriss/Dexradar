@@ -10,7 +10,7 @@ import { delay } from 'rxjs';
   styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent implements OnInit {
-  tokenContractAddress = '0x14d4c7a788908fbbbd3c1a4bac4aff86fe1573eb';
+  tokenContractAddress = '';
 
   apiKey = 'Z4M71TUYY87Z18PQP57MSC1EYTI82URZ4T';
   coingeckoApiUrl = 'https://api.coingecko.com/api/v3';
@@ -49,8 +49,7 @@ export class MainPageComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    this.searchAddress()
-  }
+   }
 
 
   async searchAddress() {
