@@ -24,7 +24,7 @@
         </mat-card-header>
         <mat-card-content>
             <div class="m-2">
-                <div fxLayout="row" fxLayoutGap="20px">
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="20px">
                     <div fxFlex="100%" fxFlexOrder.lt-md="1">
                         <h3>Token Overview:</h3>
                         <p> 📝Contract Name: {{contractName}}</p>
@@ -40,14 +40,14 @@
                                 {{ownerAddress}}</a>
                         </p>
                         <p> 💸 Owner Balance: {{ownerBalance}} ETH</p>
-                        <!-- <p> 💵 Market Cap: $:{{marketCapUsdDisplay}} </p>
-                        <p> 💰 Liquidity: $:{{liquidityUsd}}   </p> -->
-                        <p> 👥 Holders: {{holdersCount}}</p>
-                        <p> 💼 Fresh Wallet: {{freshWallets}}</p>
-                        <p> 💼 Dormant Wallet ( < 30 days): {{dormantWallets}}</p>
-                                <p> 🐋 Whales Wallet (100K): {{whaleWallets}}</p>
-                                <p> 🐬 Dolphins Wallet (20K): {{dolphinWallets}}</p>
-                                <p> 🐟 fishe Wallet (5K): {{fishWallets}}</p>                                
+                        <!-- <p> 💵 Market Cap: $:{{marketCapUsdDisplay}}- coming soon </p>
+                        <p> 💰 Liquidity: $:{{liquidityUsd}} - coming soon  </p>  -->
+                        <p> 👥 Holders: {{holdersCount}} - coming soon</p>
+                        <p> 💼 Fresh Wallet: {{freshWallets}} - coming soon</p>
+                        <p> 💼 Dormant Wallet ( < 30 days): {{dormantWallets}} - coming soon</p>
+                                <p> 🐋 Whales Wallet (100K): {{whaleWallets}} - coming soon</p>
+                                <p> 🐬 Dolphins Wallet (20K): {{dolphinWallets}} - coming soon</p>
+                                <p> 🐟 fishe Wallet (5K): {{fishWallets}} - coming soon</p>                                
                     </div>
                     <div fxFlex="100%" fxFlexOrder.lt-md="2">
                         <h3>Top Holders:</h3>
@@ -58,9 +58,9 @@
                                         holder.url }}</a></p>
                                 <p>Holdings Percent: {{ holder.holdingsPercent }}%</p>
                                 <p>Holding Time: {{ holder.holdingTime }}</p>
-                                <!-- <p>Total Spent: {{ holder.totalSpent }}</p> -->
+                                <p>Total Spent: - coming soon</p>
                                 <!-- <p>Current Value: {{ holder.currentValue }}</p> -->
-                                <p>Total Funds: {{ holder.totalFunds }}</p>
+                                <p>Total Funds: {{ holder.totalFunds }}  - coming soon</p>
                                 <hr>
                             </div>
                         </div>
